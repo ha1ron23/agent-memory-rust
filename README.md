@@ -23,7 +23,7 @@ Rust-powered memory system for AI agents. Three layers: long-term (graph + embed
   ```
   ### Build & run
   ```bash
-  git clone https://github.com/yourusername/agent-memory
+  git clone https://github.com/ha1ron/agent-memory-rust.git
   cd agent-memory
   cargo build --release
   cargo run --release 
