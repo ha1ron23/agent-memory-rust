@@ -15,7 +15,6 @@ pub enum WalCommand {
 
 const WAL_PATH: &str = "memory.wal";
 
-// Асинхронная запись (не блокирует событийный цикл)
 pub async fn append_command(cmd: WalCommand) -> std::io::Result<()> {
     spawn_blocking(move || {
         let mut file = OpenOptions::new()
@@ -31,7 +30,6 @@ pub async fn append_command(cmd: WalCommand) -> std::io::Result<()> {
     .unwrap()
 }
 
-// Восстановление графа (синхронно, при старте)
 pub fn recover_graph(memory: &mut AgentMemory) -> std::io::Result<()> {
     let file = match File::open(WAL_PATH) {
         Ok(f) => f,
@@ -63,7 +61,6 @@ pub fn recover_graph(memory: &mut AgentMemory) -> std::io::Result<()> {
     Ok(())
 }
 
-// Восстановление слоёв (STM, RM)
 pub fn recover_layers() -> std::io::Result<(Vec<ShortTermEvent>, Vec<ReasoningStep>)> {
     let file = match File::open(WAL_PATH) {
         Ok(f) => f,
