@@ -34,7 +34,6 @@ impl AgentMemory {
         }
     }
 
-    // Добавляет узел, избегая дублирования по content+mem_type
     pub fn add_node(&mut self, node: MemoryNode) -> Result<(), String> {
         let key = (node.content.clone(), node.mem_type.clone());
         if self.content_index.contains_key(&key) {
@@ -64,7 +63,6 @@ impl AgentMemory {
             .collect()
     }
 
-    // Возвращает последние N узлов (по created_at, от новых к старым)
     pub fn get_recent(&self, limit: usize) -> Vec<&MemoryNode> {
         let mut nodes: Vec<&MemoryNode> = self.graph.node_weights().collect();
         nodes.sort_by_key(|n| std::cmp::Reverse(n.created_at));
