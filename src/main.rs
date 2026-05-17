@@ -102,14 +102,12 @@ async fn main() {
         .with_max_level(tracing::Level::INFO)
         .init();
 
-    // 1. Восстанавливаем граф
     let mut graph = AgentMemory::new();
     if let Err(e) = wal::recover_graph(&mut graph) {
         eprintln!("Graph WAL recovery error: {}", e);
     }
     info!("Graph contains {} nodes", graph.len());
 
-    // 2. Восстанавливаем слои
     let (stm_events, reasoning_steps) = match wal::recover_layers() {
         Ok((ev, st)) => (ev, st),
         Err(e) => {
@@ -176,7 +174,6 @@ async fn add_memory(
     let id = req.id.unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
     let content = req.content.clone();
 
-    // Получаем эмбеддинг (можно обернуть в spawn_blocking)
     let http_client = reqwest::Client::new();
     let embedding = match embeddings::fetch_embedding(&content, &http_client).await {
         Ok(vec) => Some(vec),
